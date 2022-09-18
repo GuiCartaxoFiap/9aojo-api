@@ -35,7 +35,7 @@ public class AssistanceServiceTest {
 
         Assertions.assertEquals(values.size(), 2);
         Assertions.assertSame(values.get(0), assistance1);
-        Assertions.assertSame(values.get(1), assistance1);
+        Assertions.assertSame(values.get(1), assistance2);
     }
 
     @Test
