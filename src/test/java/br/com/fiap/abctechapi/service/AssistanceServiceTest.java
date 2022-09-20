@@ -6,11 +6,13 @@ import br.com.fiap.abctechapi.service.impl.AssistanceServiceImpl;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
 import static org.mockito.Mockito.when;
 
+@SpringBootTest
 public class AssistanceServiceTest {
 
     @Mock
