@@ -23,12 +23,13 @@ public class ControllerExceptionHandler {
     }
 
     private ResponseEntity<ErrorMessageResponse> getErrorMessageResponseResponseEntity(String message, String description, HttpStatus statusCode) {
-        ErrorMessageResponse error = new ErrorMessageResponse();
-        error.setMessage(message);
-        error.setDescription(description);
-        error.setTimeStamp(new Date());
-        error.setStatusCode(statusCode.value());
+        ErrorMessageResponse error = ErrorMessageResponse.builder()
+        .message(message)
+        .description(description)
+        .timeStamp(new Date())
+        .statusCode(statusCode.value())
+        .build();
 
-        return new ResponseEntity<ErrorMessageResponse>(error, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.badRequest().body(error);
     }
 }

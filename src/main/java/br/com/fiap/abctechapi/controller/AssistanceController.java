@@ -20,9 +20,7 @@ public class AssistanceController {
 
     @GetMapping()
     public ResponseEntity<List<Assistance>> getAssists(){
-
-        List<Assistance> list = service.getAssistanceList();
-        return ResponseEntity.ok(list);
+        return ResponseEntity.ok(service.getAssistanceList());
     }
 
 }
