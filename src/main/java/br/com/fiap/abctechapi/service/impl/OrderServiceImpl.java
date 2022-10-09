@@ -2,46 +2,43 @@ package br.com.fiap.abctechapi.service.impl;
 
 import br.com.fiap.abctechapi.handler.exception.MaxAssistsException;
 import br.com.fiap.abctechapi.handler.exception.MininumAssistRequiredException;
-import br.com.fiap.abctechapi.model.Assistance;
 import br.com.fiap.abctechapi.model.Order;
 import br.com.fiap.abctechapi.repository.AssistanceRepository;
 import br.com.fiap.abctechapi.repository.OrderRepository;
 import br.com.fiap.abctechapi.service.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
-    private OrderRepository orderRepository;
-    private AssistanceRepository assistanceRepository;
-
-    public OrderServiceImpl(
-            @Autowired OrderRepository orderRepository,
-            @Autowired AssistanceRepository assistanceRepository) {
-        this.orderRepository = orderRepository;
-        this.assistanceRepository = assistanceRepository;
-    }
+    private static final String INVALID_ASSISTS = "Invalid Assists";
+    private final OrderRepository orderRepository;
+    private final AssistanceRepository assistanceRepository;
 
     @Override
-    public void saveOrder(Order order, List<Long> arrayAssists) throws Exception {
-        ArrayList<Assistance> assistances = new ArrayList<>();
-        arrayAssists.forEach(i -> {
-            Assistance assistance = assistanceRepository.findById(i).orElseThrow();
-            assistances.add(assistance);
-        });
+    public void saveOrder(Order order, List<Long> assistIds) throws Exception {
+        final var assistances = assistanceRepository.findByIdIn(assistIds);
 
         order.setAssists(assistances);
 
-        if(!order.hasMinAssists()) {
-            throw new MininumAssistRequiredException("Invalid Assists", "Necessário no mínimo uma assistência");
-        } else if(order.exceedsMaxAssists()) {
-            throw new MaxAssistsException("Invalid Assists", "Número máximo de assists é 15");
-        }
+        validateOrder(order);
+
         orderRepository.save(order);
+    }
+
+    private void validateOrder(Order order) throws Exception {
+        if (!order.hasMinAssists()) {
+            throw new MininumAssistRequiredException(INVALID_ASSISTS, "Necessário no mínimo uma assistência");
+        }
+
+        if (order.exceedsMaxAssists()) {
+            throw new MaxAssistsException(INVALID_ASSISTS, "Número máximo de assists é 15");
+        }
     }
 
     @Override

@@ -6,7 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table(name = "orders")
@@ -27,18 +30,22 @@ public class Order {
     private List<Assistance> assists;
 
     @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "start_order_location_id", foreignKey = @ForeignKey(name ="FK_start_order_id"))
+    @JoinColumn(name = "start_order_location_id", foreignKey = @ForeignKey(name = "FK_start_order_id"))
     private OrderLocation startOrderLocation;
 
     @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "end_order_location_id" , foreignKey = @ForeignKey(name ="FK_end_order_id"))
+    @JoinColumn(name = "end_order_location_id", foreignKey = @ForeignKey(name = "FK_end_order_id"))
     private OrderLocation endOrderLocation;
 
-    public boolean hasMinAssists (){
-        return assists.size() > 0;
+    public boolean hasMinAssists() {
+        return Optional
+                .ofNullable(this.assists)
+                .orElse(Collections.emptyList()).size() > 0;
     }
 
-    public boolean exceedsMaxAssists () {
-        return assists.size() > 15;
+    public boolean exceedsMaxAssists() {
+        return Optional
+                .ofNullable(this.assists)
+                .orElse(Collections.emptyList()).size() > 15;
     }
 }
