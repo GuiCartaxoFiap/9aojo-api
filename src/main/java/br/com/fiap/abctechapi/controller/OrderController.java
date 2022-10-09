@@ -19,18 +19,18 @@ public class OrderController {
     private OrderApplication orderApplication;
 
     @Autowired
-    public OrderController(OrderApplication orderApplication){
+    public OrderController(OrderApplication orderApplication) {
         this.orderApplication = orderApplication;
     }
 
     @PostMapping
-    public ResponseEntity createOrder(@RequestBody OrderDto orderDto) throws Exception {
+    public ResponseEntity<Void> createOrder(@RequestBody OrderDto orderDto) throws Exception {
         orderApplication.createOrder(orderDto);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/operator/{operatorId}")
-    public ResponseEntity<List<OrderResponseDto>> listOrdersOperator(@PathVariable Long operatorId){
+    public ResponseEntity<List<OrderResponseDto>> listOrdersOperator(@PathVariable Long operatorId) {
         return ResponseEntity.ok(orderApplication.listOrderByOperatorId(operatorId));
     }
 }
