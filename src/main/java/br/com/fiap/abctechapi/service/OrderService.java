@@ -8,4 +8,6 @@ public interface OrderService {
 
     void saveOrder(Order order, List<Long> arrayAssists) throws Exception;
     List<Order> listOrderByOperator(Long operatorId);
+
+    Order getOrderById(Long orderId);
 }

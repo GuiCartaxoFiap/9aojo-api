@@ -15,7 +15,6 @@ public class HealthCheckController {
 
     @GetMapping("version")
     public ResponseEntity<String> status() throws IOException {
-
         Properties properties = new Properties();
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream("application.yaml");
         properties.load(inputStream);
