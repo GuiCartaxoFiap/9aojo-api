@@ -68,6 +68,18 @@ public class OrderServiceTest {
     }
 
     @Test
+    public void create_order_error_find_assistance_match() {
+        final var order = new Order();
+        final var ids = generateMocksIds(2);
+        final var assistance = generateMockAssistance(ids.get(0));
+
+        when(assistanceRepository.findByIdIn(ids)).thenReturn(List.of(assistance));
+
+        assertThrows(RuntimeException.class, () -> orderService.saveOrder(order, ids));
+        verify(orderRepository, times(0)).save(order);
+    }
+
+    @Test
     public void create_order_success() throws Exception {
         Order newOrder = new Order();
 
@@ -82,7 +94,7 @@ public class OrderServiceTest {
 
     private List<Long> generateMocksIds(int number) {
         final var listOfIds = new ArrayList<Long>();
-        for (int x = 0; x < number; x++) {
+        for (int x = 1; x <= number; x++) {
             listOfIds.add(Integer.toUnsignedLong(x));
         }
         return listOfIds;
@@ -90,13 +102,14 @@ public class OrderServiceTest {
 
     private List<Assistance> generateAssistanceMockList(final List<Long> ids) {
         return ids.stream()
-                .map(this::createMockAssitance)
+                .map(this::generateMockAssistance)
                 .collect(Collectors.toList());
     }
 
-    private Assistance createMockAssitance(final Long id) {
+    private Assistance generateMockAssistance(final Long id) {
         final var description = String.format("Teste description %d", id);
-        return new Assistance(id, "Teste", description);
+        final var name = String.format("Teste %d", id);
+        return new Assistance(id, name, description);
     }
 
 }
