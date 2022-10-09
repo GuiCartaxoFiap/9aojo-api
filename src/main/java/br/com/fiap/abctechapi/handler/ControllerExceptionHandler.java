@@ -22,14 +22,12 @@ public class ControllerExceptionHandler {
         return getErrorMessageResponseResponseEntity(exception.getMessage(), exception.getDescription(), HttpStatus.BAD_REQUEST);
     }
 
-    private ResponseEntity<ErrorMessageResponse> getErrorMessageResponseResponseEntity(String message, String description, HttpStatus statusCode) {
-        ErrorMessageResponse error = ErrorMessageResponse.builder()
-        .message(message)
-        .description(description)
-        .timeStamp(new Date())
-        .statusCode(statusCode.value())
-        .build();
-
-        return ResponseEntity.badRequest().body(error);
+    private ResponseEntity<ErrorMessageResponse> getErrorMessageResponseResponseEntity(String message, String description, HttpStatus statusCode ) {
+        ErrorMessageResponse error = new ErrorMessageResponse();
+        error.setMessage(message);
+        error.setDescription(description);
+        error.setTimeStamp(new Date());
+        error.setStatusCode(statusCode.value());
+        return new ResponseEntity<ErrorMessageResponse>(error, statusCode);
     }
 }
