@@ -1,5 +1,6 @@
 package br.com.fiap.abctechapi.service;
 
+import br.com.fiap.abctechapi.handler.exception.InvalisASsistsSearchException;
 import br.com.fiap.abctechapi.handler.exception.MaxAssistsException;
 import br.com.fiap.abctechapi.handler.exception.MininumAssistRequiredException;
 import br.com.fiap.abctechapi.model.Assistance;
@@ -14,9 +15,11 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -24,6 +27,7 @@ public class OrderServiceTest {
 
     @Mock
     private OrderRepository orderRepository;
+
     @Mock
     private AssistanceRepository assistanceRepository;
 
@@ -31,51 +35,82 @@ public class OrderServiceTest {
 
     @BeforeEach
     public void init() {
-        orderService = new OrderServiceImpl(orderRepository, assistanceRepository);
-        when(assistanceRepository.findById(any())).
-                thenReturn(
-                        Optional.of(new Assistance(1L, "Teste", "Teste description:")));
+        this.orderService = new OrderServiceImpl(orderRepository, assistanceRepository);
     }
 
     @Test
-    public void order_service_not_null (){
+    public void order_service_not_null() {
         Assertions.assertNotNull(orderService);
     }
 
     @Test
     public void create_order_error_minimum() {
-        Order newOrder = new Order();
-        newOrder.setOperatorId(1234L);
+        final var order = new Order();
 
-        Assertions.assertThrows(MininumAssistRequiredException.class, () -> orderService.saveOrder(newOrder, List.of()));
-        verify(orderRepository, times(0)).save(newOrder);
+        when(assistanceRepository.findByIdIn(Collections.emptyList())).thenReturn(Collections.emptyList());
+
+        assertThrows(
+                MininumAssistRequiredException.class,
+                () -> orderService.saveOrder(order, Collections.emptyList()));
+        verify(orderRepository, times(0)).save(order);
     }
 
     @Test
     public void create_order_error_maximum() {
         Order newOrder = new Order();
-        newOrder.setOperatorId(1234L);
 
-        Assertions.assertThrows(MaxAssistsException.class, () -> orderService.saveOrder(newOrder, generate_mocks_ids(20)));
+        final var ids = generateMocksIds(20);
+        final var assistances = generateAssistanceMockList(ids);
+
+        when(assistanceRepository.findByIdIn(ids)).thenReturn(assistances);
+
+        assertThrows(MaxAssistsException.class, () -> orderService.saveOrder(newOrder, ids));
         verify(orderRepository, times(0)).save(newOrder);
+    }
+
+    @Test
+    public void create_order_error_find_assistance_match() {
+        final var order = new Order();
+        final var ids = generateMocksIds(2);
+        final var assistance = generateMockAssistance(ids.get(0));
+
+        when(assistanceRepository.findByIdIn(ids)).thenReturn(List.of(assistance));
+
+        assertThrows(InvalisASsistsSearchException.class, () -> orderService.saveOrder(order, ids));
+        verify(orderRepository, times(0)).save(order);
     }
 
     @Test
     public void create_order_success() throws Exception {
         Order newOrder = new Order();
-        newOrder.setOperatorId(1234L);
 
-        orderService.saveOrder(newOrder, generate_mocks_ids(5));
+        final var ids = generateMocksIds(5);
+        final var assistances = generateAssistanceMockList(ids);
+
+        when(assistanceRepository.findByIdIn(ids)).thenReturn(assistances);
+
+        orderService.saveOrder(newOrder, ids);
         verify(orderRepository, times(1)).save(newOrder);
     }
 
-
-    private List<Long> generate_mocks_ids(int number){
-        ArrayList<Long> arrayList = new ArrayList<>();
-        for (int x= 0; x< number; x++){
-            arrayList.add(Integer.toUnsignedLong(x));
+    private List<Long> generateMocksIds(int number) {
+        final var listOfIds = new ArrayList<Long>();
+        for (int x = 1; x <= number; x++) {
+            listOfIds.add(Integer.toUnsignedLong(x));
         }
-        return arrayList;
+        return listOfIds;
+    }
+
+    private List<Assistance> generateAssistanceMockList(final List<Long> ids) {
+        return ids.stream()
+                .map(this::generateMockAssistance)
+                .collect(Collectors.toList());
+    }
+
+    private Assistance generateMockAssistance(final Long id) {
+        final var description = String.format("Teste description %d", id);
+        final var name = String.format("Teste %d", id);
+        return new Assistance(id, name, description);
     }
 
 }

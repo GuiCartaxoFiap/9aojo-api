@@ -1,6 +1,5 @@
 package br.com.fiap.abctechapi.handler;
 
-import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;

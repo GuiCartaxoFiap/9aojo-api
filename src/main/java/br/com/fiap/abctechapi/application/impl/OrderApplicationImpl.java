@@ -9,19 +9,18 @@ import br.com.fiap.abctechapi.model.Assistance;
 import br.com.fiap.abctechapi.model.Order;
 import br.com.fiap.abctechapi.model.OrderLocation;
 import br.com.fiap.abctechapi.service.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class OrderApplicationImpl implements OrderApplication {
 
-    private OrderService orderService;
-    public OrderApplicationImpl(@Autowired OrderService orderService){
-        this.orderService = orderService;
-    }
+    private final OrderService orderService;
+
     @Override
     public void createOrder(OrderDto orderDto) throws Exception {
         Order order = new Order();
