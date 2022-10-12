@@ -28,6 +28,6 @@ public class ControllerExceptionHandler {
         error.setDescription(description);
         error.setTimeStamp(new Date());
         error.setStatusCode(statusCode.value());
-        return new ResponseEntity<ErrorMessageResponse>(error, statusCode);
+        return new ResponseEntity<>(error, statusCode);
     }
 }
