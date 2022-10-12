@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
-    private static final String INVALID_ASSISTS = "Invalid Assists";
     private final OrderRepository orderRepository;
     private final AssistanceRepository assistanceRepository;
 
@@ -54,11 +53,11 @@ public class OrderServiceImpl implements OrderService {
 
     private void validateOrder(Order order) {
         if (!order.hasMinAssists()) {
-            throw new MininumAssistRequiredException(INVALID_ASSISTS, "Necessário no mínimo uma assistência");
+            throw new MininumAssistRequiredException("Necessário no mínimo uma assistência");
         }
 
         if (order.exceedsMaxAssists()) {
-            throw new MaxAssistsException(INVALID_ASSISTS, "Número máximo de assists é 15");
+            throw new MaxAssistsException("Número máximo de assists é 15");
         }
     }
 
