@@ -1,5 +1,6 @@
 package br.com.fiap.abctechapi.service;
 
+import br.com.fiap.abctechapi.handler.exception.InvalisASsistsSearchException;
 import br.com.fiap.abctechapi.handler.exception.MaxAssistsException;
 import br.com.fiap.abctechapi.handler.exception.MininumAssistRequiredException;
 import br.com.fiap.abctechapi.model.Assistance;
@@ -75,7 +76,7 @@ public class OrderServiceTest {
 
         when(assistanceRepository.findByIdIn(ids)).thenReturn(List.of(assistance));
 
-        assertThrows(RuntimeException.class, () -> orderService.saveOrder(order, ids));
+        assertThrows(InvalisASsistsSearchException.class, () -> orderService.saveOrder(order, ids));
         verify(orderRepository, times(0)).save(order);
     }
 

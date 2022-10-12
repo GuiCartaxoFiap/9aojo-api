@@ -1,5 +1,6 @@
 package br.com.fiap.abctechapi.service.impl;
 
+import br.com.fiap.abctechapi.handler.exception.InvalisASsistsSearchException;
 import br.com.fiap.abctechapi.handler.exception.MaxAssistsException;
 import br.com.fiap.abctechapi.handler.exception.MininumAssistRequiredException;
 import br.com.fiap.abctechapi.model.Assistance;
@@ -47,7 +48,7 @@ public class OrderServiceImpl implements OrderService {
                     assistances.size(),
                     assistancesFound);
             log.warn(message);
-            throw new RuntimeException(message);
+            throw new InvalisASsistsSearchException(message);
         }
     }
 
