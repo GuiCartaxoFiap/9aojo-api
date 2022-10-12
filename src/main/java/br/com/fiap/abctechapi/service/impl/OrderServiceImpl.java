@@ -25,7 +25,7 @@ public class OrderServiceImpl implements OrderService {
     private final AssistanceRepository assistanceRepository;
 
     @Override
-    public void saveOrder(Order order, List<Long> assistIds) throws Exception {
+    public void saveOrder(Order order, List<Long> assistIds) {
         final var assistances = assistanceRepository.findByIdIn(assistIds);
 
         validateAssistanceSearch(assistIds, assistances);
@@ -52,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    private void validateOrder(Order order) throws Exception {
+    private void validateOrder(Order order) {
         if (!order.hasMinAssists()) {
             throw new MininumAssistRequiredException(INVALID_ASSISTS, "Necessário no mínimo uma assistência");
         }
