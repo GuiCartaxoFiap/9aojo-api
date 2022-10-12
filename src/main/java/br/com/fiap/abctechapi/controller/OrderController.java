@@ -1,9 +1,13 @@
 package br.com.fiap.abctechapi.controller;
 
 import br.com.fiap.abctechapi.application.dto.OrderResponseDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import br.com.fiap.abctechapi.application.OrderApplication;
 import br.com.fiap.abctechapi.application.dto.OrderDto;
@@ -16,12 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderController {
 
-    private OrderApplication orderApplication;
-
-    @Autowired
-    public OrderController(OrderApplication orderApplication) {
-        this.orderApplication = orderApplication;
-    }
+    private final OrderApplication orderApplication;
 
     @PostMapping
     public ResponseEntity<Void> createOrder(@RequestBody OrderDto orderDto) throws Exception {
