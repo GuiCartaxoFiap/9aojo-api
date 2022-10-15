@@ -10,6 +10,7 @@ import br.com.fiap.abctechapi.repository.OrderRepository;
 import br.com.fiap.abctechapi.service.impl.OrderServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,11 +40,13 @@ public class OrderServiceTest {
     }
 
     @Test
+    @DisplayName("Order service not null")
     public void order_service_not_null() {
         Assertions.assertNotNull(orderService);
     }
 
     @Test
+    @DisplayName("Create order - Minimum assists error")
     public void create_order_error_minimum() {
         final var order = new Order();
 
@@ -56,6 +59,7 @@ public class OrderServiceTest {
     }
 
     @Test
+    @DisplayName("Create order - Maximum assists error")
     public void create_order_error_maximum() {
         Order newOrder = new Order();
 
@@ -69,6 +73,7 @@ public class OrderServiceTest {
     }
 
     @Test
+    @DisplayName("Create order - Find assists ids error")
     public void create_order_error_find_assistance_match() {
         final var order = new Order();
         final var ids = generateMocksIds(2);
@@ -81,6 +86,7 @@ public class OrderServiceTest {
     }
 
     @Test
+    @DisplayName("Create order")
     public void create_order_success() throws Exception {
         Order newOrder = new Order();
 
@@ -112,5 +118,4 @@ public class OrderServiceTest {
         final var name = String.format("Teste %d", id);
         return new Assistance(id, name, description);
     }
-
 }

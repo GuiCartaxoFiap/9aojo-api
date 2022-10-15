@@ -26,7 +26,7 @@ public class AssistanceServiceTest {
     }
 
     @Test
-    @DisplayName("Listando assistências disponíveis :: Sucesso")
+    @DisplayName("Listing available assists")
     public void list_success() {
         Assistance assistance1 = new Assistance(1L, "Mock assistance 1", "Description 1");
         Assistance assistance2 = new Assistance(2L, "Mock assistance 2", "Description 2");
@@ -41,7 +41,7 @@ public class AssistanceServiceTest {
     }
 
     @Test
-    @DisplayName("Listando assistências disponíveis :: Sucesso")
+    @DisplayName("No assists available")
     public void list_error() {
         when(assistanceRepository.findAll()).thenReturn(List.of());
 
